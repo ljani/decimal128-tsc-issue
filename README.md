@@ -1,50 +1,62 @@
-# React + TypeScript + Vite
+# decimal128-tsc-issue
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Steps:
 
-Currently, two official plugins are available:
+- Run `npm run build`
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Expected result:
 
-## Expanding the ESLint configuration
+- Build completes successfully
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+Actual result:
 
-- Configure the top-level `parserOptions` property like this:
+- Build fails:
+    ```text
+    node_modules/decimal128/src/Decimal.mts:3:7 - error TS6133: 'ratOne' is declared but its value is never read.
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+    3 const ratOne = new Rational(1n, 1n);
+            ~~~~~~
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+    node_modules/decimal128/src/Decimal.mts:4:7 - error TS6133: 'ratTen' is declared but its value is never read.
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+    4 const ratTen = new Rational(10n, 1n);
+            ~~~~~~
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+    node_modules/decimal128/src/Decimal.mts:49:14 - error TS6133: 'dec' is declared but its value is never read.
+
+    49         let [dec, exp] = s.split(/[eE]/);
+                    ~~~
+
+    node_modules/decimal128/src/Decimal128.mts:45:5 - error TS6133: 'd' is declared but its value is never read.
+
+    45     d: "0" | "-0" | Rational,
+           ~
+
+    node_modules/decimal128/src/Rational.mts:7:5 - error TS6133: 'ROUNDING_MODE_HALF_EXPAND' is declared but its value is never read.
+
+    7     ROUNDING_MODE_HALF_EXPAND,
+          ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    node_modules/decimal128/src/Rational.mts:321:9 - error TS6133: 'penultimateDigit' is declared but its value is never read.
+
+    321         penultimateDigit: Digit,
+                ~~~~~~~~~~~~~~~~
+
+    node_modules/decimal128/src/Rational.mts:337:9 - error TS6133: 'penultimateDigit' is declared but its value is never read.
+
+    337         penultimateDigit: Digit,
+                ~~~~~~~~~~~~~~~~
+
+    node_modules/decimal128/src/Rational.mts:354:9 - error TS6133: 'penultimateDigit' is declared but its value is never read.
+
+    354         penultimateDigit: Digit,
+                ~~~~~~~~~~~~~~~~
+
+    node_modules/decimal128/src/Rational.mts:355:9 - error TS6133: 'finalDigit' is declared but its value is never read.
+
+    355         finalDigit: Digit,
+                ~~~~~~~~~~
+
+
+    Found 9 errors.
 ```
